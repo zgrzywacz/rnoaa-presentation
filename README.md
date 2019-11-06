@@ -1,51 +1,55 @@
 # rnoaa-presentation   
 
-What is rnoaa?
+### What is rnoaa?  
+  
+rnoaa is a client for multiple NOAA data sources, such as NCDC, sea ice, storms, buoys, and forecast data.  
+I will be exhibiting the use of rnoaa to collect National Climatic Data Center (NCDC) data, as this is relevant to my project and also a widely-used data source.  
+  
+### Getting started with rnoaa   
+  
+```
+install.packages('rnoaa')  
+library(rnoaa)  
+```  
 
-rnoaa is a client for multiple NOAA data sources, such as NCDC, sea ice, storms, buoys, and forecast data.
-I will be exhibiting the use of rnoaa to collect National Climatic Data Center (NCDC) data, as this is relevant to my project and also a widely-used data source.
+Note that there are a LOT of packages here. R should be kept up to date, as any issues with dependencies may impede your work.   
+  
+All ncdc functions interact with the NCDC application programming interface (API)  
+You will need an API key for all ncdc functions, and you can get it at this link: https://www.ncdc.noaa.gov/cdo-web/webservices/v2  
+  
+You will receive an email with your API key. This API key must be added to a .Rprofile file in order to access the data.  
 
-Getting started with rnoaa
-
-install.packages('rnoaa')
-library(rnoaa)
-
-Note that there are a LOT of packages here. R should be kept up to date, as any issues with dependencies may impede your work.
-
-All ncdc functions interact with the NCDC application programming interface (API)
-You will need an API key for all ncdc functions, and you can get it at this link: https://www.ncdc.noaa.gov/cdo-web/webservices/v2
-
-You will receive an email with your API key. This API key must be added to a .Rprofile file in order to access the data.
-
-The necessary steps here are:
-
-1. Request the API key
-2. Create an .Rprofile in your working directory for the project
-3. in the .Rprofile, enter options(noaakey="your_noaa_token")
-4. Restart .Rstudio in the directory that contains the .Rprofile
-
-I have included a .Rprofile with my NOAA token in this repository, so opening this repo as a project in Rstudio will automatically allow for NCDC data collection.
-
-Collecting data using ncdc()
-
-ncdc() is the main argument. Other functions help us find data or provide metadata.
-These functions include:
- - ncdc_datasets()
- - ncdc_datatypes()
- - ncdc_locs()
- - ncdc_locs_cats()
- - ncdc_stations()
-
-General rules of thumb:
-1. Must use quotes in ncdc() requests
-2. Date range must be less than one year
-3. Default output for all ncdc functions is 25. Have to specify if you want more; it will take longer. The alternative is you can piece it down by specifying more parameters. Max output is 1000.
-
-Let's start by finding out more about ncdc datasets.
-
+The necessary steps here are:  
+  
+1. Request the API key  
+2. Create an .Rprofile in your working directory for the project  
+3. in the .Rprofile, enter options(noaakey="your_noaa_token")  
+4. Restart .Rstudio in the directory that contains the .Rprofile  
+  
+I have included a .Rprofile with my NOAA token in this repository, so opening this repo as a project in Rstudio will automatically allow for NCDC data collection.  
+  
+### Collecting data using ncdc()  
+  
+ncdc() is the main argument. Other functions help us find data or provide metadata.   
+These functions include:  
+ - ncdc_datasets()  
+ - ncdc_datatypes()  
+ - ncdc_locs()  
+ - ncdc_locs_cats()  
+ - ncdc_stations()  
+  
+General rules of thumb:  
+1. Must use quotes in ncdc() requests  
+2. Date range must be less than one year  
+3. Default output for all ncdc functions is 25. Have to specify if you want more; it will take longer. The alternative is you can piece it down by specifying more parameters. Max output is 1000.  
+  
+Let's start by finding out more about ncdc datasets.  
+  
+```
 ncdc_datasets()
+```  
 
-
+```
 $data
                     uid    mindate    maxdate                        name datacoverage         id
 1  gov.noaa.ncdc:C00861 1763-01-01 2019-11-03             Daily Summaries         1.00      GHCND
@@ -59,11 +63,15 @@ $data
 9  gov.noaa.ncdc:C00822 2010-01-01 2010-12-01             Normals Monthly         1.00 NORMAL_MLY
 10 gov.noaa.ncdc:C00505 1970-05-12 2014-01-01     Precipitation 15 Minute         0.25  PRECIP_15
 11 gov.noaa.ncdc:C00313 1900-01-01 2014-01-01        Precipitation Hourly         1.00 PRECIP_HLY
-
-I want stations in Australia. I will start by searching for the ncdc stations in Australia.
-
+```
+  
+I want stations in Australia. I will start by searching for the ncdc stations in Australia.  
+  
+```
 ncdc_stations(locationid = 'FIPS:AS', limit = 500)
+```
 
+```
 $data
     elevation    mindate    maxdate latitude                               name datacoverage                id elevationUnit longitude
 1       295.0 1975-10-03 2007-10-08 -18.3000         GEORGETOWN POST OFFICE, AS       0.9347 GHCND:ASM00094275        METERS  143.5500
@@ -76,11 +84,15 @@ $data
 110     120.0 1907-05-01 1996-12-27 -17.5731              FAIRFIELD STATION, AS       0.4873 GHCND:ASN00003005        METERS  125.0650
 111     114.0 1893-03-01 2000-01-15 -18.1919         FITZROY CROSSING COMP., AS       0.9016 GHCND:ASN00003006        METERS  125.5644
  [ reached getOption("max.print") -- omitted 389 rows ]
- 
- Okay, there's a lot more stations than I thought. As it turns out, it's very difficult to find a specific station using this method with all of the data available. Let's try adding more parameters to decrease this list.
- 
+ ```
+   
+Okay, there's a lot more stations than I thought. As it turns out, it's very difficult to find a specific station using this method with all of the data available. Let's try adding more parameters to decrease this list.  
+   
+ ```
  ncdc_stations(datasetid = 'GSOM', locationid = 'FIPS:AS', startdate = '1991-01-01', enddate= '1991-03-01', extent = c(-41,140,-40,145), limit = 500)
- 
+```
+
+```
     elevation    mindate    maxdate latitude                      name datacoverage                id elevationUnit longitude
 1       15.0 1888-04-01 2017-12-01 -40.6842   CAPE GRIM WOOLNORTH, AS       0.8773 GHCND:ASN00091011        METERS  144.7181
 2       77.0 1952-01-01 2018-06-01 -40.9272    REDPA GREENES ROAD, AS       0.9499 GHCND:ASN00091082        METERS  144.7489
@@ -94,15 +106,19 @@ $data
 10      18.0 1936-02-01 2019-09-01 -40.0092 CITY OF MELBOURNE BAY, AS       0.9921 GHCND:ASN00098000        METERS  144.1111
 11     111.0 1917-07-01 2005-01-01 -40.0511                GRASSY, AS       0.1674 GHCND:ASN00098008        METERS  144.0581
 12        NA 1910-01-01 2019-08-01 -40.1167          SURPRISE BAY, AS       0.2660 GHCND:ASN00098012          <NA>  143.9167
+```
 
-Success!
-The key here was adding the extent - that narrowed the list more than most other factors, and can be useful for finding specific stations.
-The alternative to this process is to use NOAA's find-a-station web tool: https://www.ncdc.noaa.gov/cdo-web/datatools/findstation
+Success!   
+The key here was adding the extent - that narrowed the list more than most other factors, and can be useful for finding specific stations.  
+The alternative to this process is to use NOAA's find-a-station web tool: https://www.ncdc.noaa.gov/cdo-web/datatools/findstation  
+  
+Now that we have stations for the area that we want to look at, let's pick Cape Grim BAPS and look at some data.  
+  
+```
+ncdc(datasetid='GSOM', stationid = 'GHCND:ASN00091245', startdate = '1991-01-01', enddate = '1991-12-01')  
+```
 
-Now that we have stations for the area that we want to look at, let's pick Cape Grim BAPS and look at some data.
-
-ncdc(datasetid='GSOM', stationid = 'GHCND:ASN00091245', startdate = '1991-01-01', enddate = '1991-12-01')
-
+```
 $data
 # A tibble: 25 x 10
    date                datatype station           value fl_S  fl_a  fl_cc fl_d  fl_M  fl_Q 
@@ -118,13 +134,17 @@ $data
  9 1991-01-01T00:00:00 DX70     GHCND:ASN00091245   2   a     5     NA    NA    NA    NA   
 10 1991-01-01T00:00:00 DX90     GHCND:ASN00091245   0   a     5     NA    NA    NA    NA   
 # ... with 15 more rows
-
-Woah! what does all of this mean?
-
-This is a strangely formatted set of data - each observation has its own row. We could go through and collect just the datatype we want, but it's easier to specify "datatypeid" in the request. In addition, we will also ask for units, just to be sure we know what we're looking at. 
-
+```
+  
+Woah! what does all of this mean?  
+  
+This is a strangely formatted set of data - each observation has its own row. We could go through and collect just the datatype we want, but it's easier to specify "datatypeid" in the request. In addition, we will also ask for units, just to be sure we know what we're looking at.   
+  
+```
 ncdc(datasetid='GSOM', stationid = 'GHCND:ASN00091245', datatypeid='TAVG', startdate = '1991-01-01', enddate = '1991-12-01', limit = 100, add_units=TRUE)
+```
 
+```
  date                datatype station           value fl_a  fl_S  units  
    <chr>               <chr>    <chr>             <dbl> <chr> <chr> <chr>  
  1 1991-01-01T00:00:00 TAVG     GHCND:ASN00091245 15.9  5     a     celsius
@@ -138,12 +158,17 @@ ncdc(datasetid='GSOM', stationid = 'GHCND:ASN00091245', datatypeid='TAVG', start
  9 1991-10-01T00:00:00 TAVG     GHCND:ASN00091245 11.7  2     a     celsius
 10 1991-11-01T00:00:00 TAVG     GHCND:ASN00091245 12.4  2     a     celsius
 11 1991-12-01T00:00:00 TAVG     GHCND:ASN00091245 13.7  ""    a     celsius
+```
 
-Cool! Now, we will save this to a variable and then plot it, using ncdc_plot()
-
+Cool! Now, we will save this to a variable and then plot it, using ncdc_plot()  
+ 
+ ```
 capeGrimTemp <- ncdc(datasetid='GSOM', stationid = 'GHCND:ASN00091245', datatypeid='TAVG', startdate = '1991-01-01', enddate = '1991-12-01', limit = 100, add_units=TRUE)
 ncdc_plot(capeGrimTemp)
+```
+   
+You can even request multiple datatypes by using a vector or list. Plotting doesn't work well on this, though, and observations aren't grouped together, so data would need to be split if collected this way.   
 
-You can even request multiple datatypes by using a vector or list. Plotting doesn't work well on this, though, and observations aren't grouped together, so data would need to be split if collected this way.
-
+```
 ncdc(datasetid='GSOM', stationid = 'GHCND:ASN00091245', datatypeid=c('TAVG','PRCP'), startdate = '1991-01-01', enddate = '1991-12-01', limit = 500, add_units=TRUE)
+```
