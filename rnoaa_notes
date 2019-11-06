@@ -4,6 +4,12 @@ NCDC - National Climatc Data Center
 Functions in the package interact with the NCDC application programming interface (API)
 Need an API key for all ncdc functions, get it at this link: https://www.ncdc.noaa.gov/cdo-web/webservices/v2
 
+1. Request the API key
+2. Create an .Rprofile in your working directory for the project
+3. in the .Rprofile, enter options(noaakey="your_noaa_token")
+
+This way, every time you open R in the project, you will be able to use rnoaa 
+
 Function prefixes:
 buoy_* - National Buoy Data Center
 gefs_* - GEFS forecast ensemble data
@@ -25,7 +31,15 @@ lcd - Local Climitalogical Data from NOAA
 
 ncdc probably most relevant for most users
 
-ncdc() - datasetid is only required field
+ncdc() - datasetid is required field
+ncdc() is the main argument. Everything else helps find data or provide metadata
+Must use quotes
+Date range must be less than one year
 
 ncdc_datasets() - gives info on ncdc datasets available
-figure out API key
+
+Default output is 25. Have to specify if you want more, will take longer. Or you can piece it down. Max is 1000
+
+ncdc_stations(locationid = 'FIPS:AS')
+ncdc_datatypes(stationid = 'GHCND:ASN00091245')
+ncdc(datasetid='GCHND', stationid = 'GHCND:ASN00091245', datatypeid = 'MNTM')
